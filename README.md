@@ -73,7 +73,7 @@ wget -O /tmp/install.sh http://ghproxy.ch3ng.top/https://raw.githubusercontent.c
 > **请勿在 SSH 会话中执行此脚本，否则 SSH 连接将中断。请谨慎操作，风险自负。**
 
 ```bash
-wget -O /tmp/uninstall.sh http://ghproxy.ch3ng.top/https://raw.githubusercontent.com/CH3NGYZ/tailscale-openwrt/chinese_mainland/uninstall.sh && chmod +x /tmp/uninstall.sh && /tmp/uninstall.sh && rm -f /tmp/uninstall.sh
+wget -O /tmp/uninstall.sh http://ghproxy.ch3ng.top/https://raw.githubusercontent.com/sheep-sleep/tailscale-openwrt/chinese_mainland/uninstall.sh && chmod +x /tmp/uninstall.sh && /tmp/uninstall.sh && rm -f /tmp/uninstall.sh
 ```
 
 ---

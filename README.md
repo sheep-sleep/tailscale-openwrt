@@ -93,7 +93,7 @@ reboot
 如您希望同步更新下载脚本（例如替换代理源），请执行以下命令：
 
 ```bash
-rm -rf /tmp/tailscale* && wget -O /tmp/install.sh http://ghproxy.ch3ng.top/https://raw.githubusercontent.com/CH3NGYZ/tailscale-openwrt/chinese_mainland/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && rm -f /tmp/install.sh && reboot
+rm -rf /tmp/tailscale* && wget -O /tmp/install.sh http://ghproxy.ch3ng.top/https://raw.githubusercontent.com/sheep-sleep/tailscale-openwrt/chinese_mainland/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && rm -f /tmp/install.sh && reboot
 ```
 
 ---

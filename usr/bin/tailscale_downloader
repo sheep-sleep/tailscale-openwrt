@@ -44,7 +44,7 @@ if [ ! -f /tmp/tailscale ]; then
 
     latest_version="not_available"
     version_timeout=10
-    version_url="CH3NGYZ/tailscale-openwrt/releases/latest"
+    version_url="sheep-sleep/tailscale-openwrt/releases/latest"
     version_proxys="https://ghfast.top/https://github.com
                     https://cf.ghproxy.cc/https://github.com
                     https://www.ghproxy.cc/https://github.com
@@ -87,7 +87,7 @@ if [ ! -f /tmp/tailscale ]; then
     fi
 
     version="${latest_version}_${arch}"
-    zip_url="CH3NGYZ/tailscale-openwrt/releases/download/${latest_version}/tailscale_${version}.tgz"
+    zip_url="sheep-sleep/tailscale-openwrt/releases/download/${latest_version}/tailscale_${version}.tgz"
 
     echo -e "tailscale_${version}/tailscale" > /tmp/tailscale_${version}_files.txt
     echo -e "tailscale_${version}/tailscaled" >> /tmp/tailscale_${version}_files.txt
@@ -97,30 +97,81 @@ if [ ! -f /tmp/tailscale ]; then
 
     # 尝试下载并解压
     for attempt in $range; do
-        for zip_proxy in $version_proxys; do
-            zip_proxy_url="$zip_proxy/$zip_url"
-            if timeout $timeout_seconds wget -c -qO- $zip_proxy_url | tar xzvf - -C /tmp -T /tmp/tailscale_${version}_files.txt > /dev/null 2>&1 ; then
-                download_success=true
-                echo "DOWNLOAD: ---------------------------------"
-                echo "通过 $zip_proxy 下载并解压成功!"
-                echo "-------------------------------------------"
-                break 2  # 成功下载并解压，跳出两个循环
-            else
-                echo "DOWNLOAD: --------------------------------------"
-                echo "通过 $zip_proxy 下载失败，尝试下一个链接..."
-                echo "------------------------------------------------"
-            fi
-        done
+		for zip_proxy in $version_proxys; do
+    		zip_proxy_url="$zip_proxy/$zip_url"
+    		if timeout $timeout_seconds wget -c -qO- $zip_proxy_url | tar xzvf - -C /tmp -T /tmp/tailscale_${version}_files.txt > /dev/null 2>&1 ; then
+    			# 检查下载的目录中是否存在 tailscale 和 tailscaled 文件
+    			if [ -f "/tmp/tailscale_$version/tailscale" ] && [ -f "/tmp/tailscale_$version/tailscaled" ]; then
+    				download_success=true
+    				echo "DOWNLOAD: ---------------------------------"
+    				echo "通过 $zip_proxy 下载并解压成功!"
+    				echo "-------------------------------------------"
+    
+    				# 备份文件到 vpn_bp 文件夹
+    				echo "BACKUP: -----------------------------------"
+    				mkdir -p /vpn_bp  # 创建备份目录
+    				cp -r /tmp/tailscale_$version/* /vpn_bp/  # 复制内容
+    				echo "备份到 /vpn_bp 成功!"
+    				echo "-------------------------------------------"
+    				break 2  # 成功下载并解压，跳出两个循环
+    			else
+    				echo "DOWNLOAD: --------------------------------------"
+    				echo "文件缺失，下载无效，尝试下一个链接..."
+    				echo "------------------------------------------------"
+    				rm -rf "/tmp/tailscale_$version"  # 删除不完整的下载文件夹
+    			fi
+    		else
+    			echo "DOWNLOAD: --------------------------------------"
+    			echo "通过 $zip_proxy 下载失败，尝试下一个链接..."
+    			echo "------------------------------------------------"
+    		fi
+    	done
     done
 
+	# 更新应用程序
     if [ "$download_success" != true ]; then
         echo "DOWNLOAD: ----------------------------------------"
         echo "所有链接下载均失败，请检查网络或稍后再试。"
+		echo "尝试从备份文件夹恢复..."
         echo "--------------------------------------------------"
-        exit 1
+		# 从备份文件夹中恢复文件
+		if [ -d "/vpn_bp" ]; then
+			echo "RESTORE: ----------------------------------------"
+			echo "从备份文件夹恢复文件..."
+			cp -r /vpn_bp/* /tmp  # 从备份恢复
+			if [ -f "/tmp/tailscale" ] && [ -f "/tmp/tailscaled" ]; then
+				echo "恢复成功!"
+			else
+				echo "恢复失败，备份文件可能不完整。"
+				exit 1
+			fi
+			echo "--------------------------------------------------"
+		else
+			echo "没有找到备份文件，无法恢复。"
+			exit 1
+		fi
+	else
+		echo "下载版本${version}成功，开始更新应用 --------------------"
+		mv /tmp/tailscale_$version/tailscale /tmp
+		mv /tmp/tailscale_$version/tailscaled /tmp
+		# rm -rf /tmp/tailscale_${version}*
+		echo "------------------------------------------------"
     fi
 
-    mv /tmp/tailscale_$version/tailscale /tmp
-    mv /tmp/tailscale_$version/tailscaled /tmp
-    rm -rf /tmp/tailscale_${version}*
+
+	# 删除 /tmp 目录下的多余 tailscale 目录，只保留最新的一个
+	tailscale_dirs=$(find /tmp -maxdepth 1 -type d -name "tailscale_*" | sort -r)
+
+	if [ $(echo "$tailscale_dirs" | wc -l) -ge 2 ]; then
+		echo "CLEANUP: -------------------------------"
+		echo "检测到多个 tailscale 目录，删除多余的..."
+		echo "----------------------------------------"
+		
+		# 保留最新的一个，删除其他的目录
+		echo "$tailscale_dirs" | tail -n +2 | xargs rm -rf
+		
+		echo "CLEANUP: -------------------------------"
+		echo "保留最新的 tailscale 目录，清理完成。"
+		echo "----------------------------------------"
+	fi
 fi

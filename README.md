@@ -59,7 +59,9 @@ GitHub Actions 将自动打包并上传 tgz 文件至您仓库的 release 中。
 使用以下命令进行首次安装：
 
 ```bash
-wget -O /tmp/install.sh http://ghproxy.ch3ng.top/https://raw.githubusercontent.com/sheep-sleep/tailscale-openwrt/chinese_mainland/install.sh && chmod +x /tmp/install.sh && /tmp/install.sh && rm -f /tmp/install.sh
+wget -O /tmp/install.sh https://raw.githubusercontent.com/sheep-sleep/tailscale-openwrt/chinese_mainland/install.sh
+chmod +x /tmp/install.sh
+/tmp/install.sh
 ```
 
 > 自 Tailscale 1.48.0 起，官方已支持 nftables。本项目自 2024.08.20 起适配，使用版本为 1.72.0，并在执行进程中传入 `TS_DEBUG_FIREWALL_MODE=auto` 环境变量。

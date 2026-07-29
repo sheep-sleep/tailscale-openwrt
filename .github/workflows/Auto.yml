@@ -1,6 +1,7 @@
 on:
  schedule:
-   - cron:  "30 22 * * *"
+   - cron: "30 22 */5 * *"
+
  workflow_dispatch:
  watch:
     types: [started]

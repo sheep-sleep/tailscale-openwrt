@@ -23,7 +23,8 @@ jobs:
 
       - name: Set Version
         id: set_version
-        run: echo "::set-output name=version::${{ github.event.inputs.version }}"
+        run: echo "variable_name=value" >> $GITHUB_OUTPUT
+
 
       - name: Get Latest Version
         id: get_latest_version

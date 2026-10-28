@@ -134,8 +134,6 @@ echo "tailscale up --accept-dns=false --accept-routes=true --advertise-exit-node
 echo "以启用子网中继，请自行修改网段"
 echo "----------------------------------------------------------------------------------"
 
-# echo "INSTALL: ---------------------------------------------"
-# echo "当前机器的架构是 arch_:${arch_}${endianness}| arch:${arch}"
-# echo "如果成功运行, 请在这个issue留下评论以便作者及时修改说明文档: "
-# echo "https://github.com/sheep-sleep/tailscale-openwrt/issues/6"
-# echo "------------------------------------------------------"
+echo "INSTALL: ---------------------------------------------"
+echo "当前机器的架构是 arch_:${arch_}${endianness}| arch:${arch}"
+echo "------------------------------------------------------"

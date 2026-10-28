@@ -129,7 +129,9 @@ echo "-------------------------"
 tailscale up
 
 echo "INSTALL: -------------------------------------------------------------------------"
-echo "你可以运行 tailscale up --advertise-routes=192.168.1.0/24 以启用子网中继，请自行修改网段"
+echo "你可以运行
+echo "tailscale up --accept-dns=false --accept-routes=true --advertise-exit-node --advertise-routes=192.168.1.0/24 --netfilter-mode=off"
+echo "以启用子网中继，请自行修改网段"
 echo "----------------------------------------------------------------------------------"
 
 # echo "INSTALL: ---------------------------------------------"

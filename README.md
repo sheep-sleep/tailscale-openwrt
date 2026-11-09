@@ -111,5 +111,3 @@ rm -rf /tmp/tailscale* && wget -O /tmp/install.sh http://ghproxy.ch3ng.top/https
 ## 特别感谢
 
 - [adyanth - openwrt-tailscale-enabler](https://github.com/adyanth/openwrt-tailscale-enabler)
-
-[![Star History Chart](https://api.star-history.com/svg?repos=CH3NGYZ/tailscale-openwrt&type=Date)](https://www.star-history.com/#CH3NGYZ/tailscale-openwrt&Date)
